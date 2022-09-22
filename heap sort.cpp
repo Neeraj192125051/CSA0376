@@ -1,60 +1,54 @@
 #include<stdio.h>
-void heapify(int*,int, int);
-void heapsort(int*, int);
-void print_array(int*, int);
-int main()
+void create(int []);
+void down_adjust(int [],int);
+void main()
 {
-    int arr[] = { 10, 30, 5, 63, 22, 12, 56, 33 };
-    int n = sizeof(arr) / sizeof(arr[0]);
-    printf("\nArray before sorting:\n");
-    print_array(arr, n);
-    heapsort(arr, n);
-    printf("\n\nArray after sorting:\n");
-    print_array(arr, n);
-    return 0;
-}
-void heapsort(int* arr, int n)
-{
-    for (int i = n / 2 - 1; i >= 0; i--)
-    {
-        heapify(arr, n, i);
-    }
-    for (int i = n - 1; i >= 0; i--)
-    {
-        int temp = arr[i];
-        arr[i] = arr[0];
-        arr[0] = temp;
-        heapify(arr, i, 0);
-    }
-}
-void heapify(int* arr, int n, int i)
-{
-    int largest = i;
-    int left = 2 * i + 1;
-    int right  = 2 * i + 2;
-    if (left < n && arr[left] > arr[largest])
-    {
-        largest = left;
-    }
+	int heap[30],n,i,last,temp;
+	printf("Enter no. of elements:");
+	scanf("%d",&n);
+	printf("\nEnter elements:");
+	for(i=1;i<=n;i++)
+	scanf("%d",&heap[i]);
+	heap[0]=n;
+	create(heap);
 
-    if (right < n && arr[right] > arr[largest])
-    {
-        largest = right;
-    }
-    if (largest != i)
-    {
-        int temp = arr[i];
-        arr[i] = arr[largest];
-        arr[largest] = temp;
-        heapify(arr, n, largest);
-    }
+	while(heap[0] > 1)
+	{
+		last=heap[0];
+		temp=heap[1];
+		heap[1]=heap[last];
+		heap[last]=temp;
+		heap[0]--;
+		down_adjust(heap,1);
+	}
+	printf("\nArray after Heap sorting:\n");
+	for(i=1;i<=n;i++)
+	printf("%d ",heap[i]);
 }
-void print_array(int* arr, int n)
+void create(int heap[])
 {
-    for (int i = 0; i < n; i++)
-    {
-        printf("%d  ", arr[i]);
-    }
+	int i,n;
+	n=heap[0]; 
+	for(i=n/2;i>=1;i--)
+	down_adjust(heap,i);
 }
-
-
+void down_adjust(int heap[],int i)
+{
+	int j,temp,n,flag=1;
+	n=heap[0];
+	while(2*i<=n && flag==1)
+	{
+		j=2*i; 
+		if(j+1<=n && heap[j+1] > heap[j])
+		j=j+1;
+		if(heap[i] > heap[j])
+		flag=0;
+		else
+		{
+			temp=heap[i];
+			heap[i]=heap[j];
+			heap[j]=temp;
+			i=j;
+		}
+	}
+}
